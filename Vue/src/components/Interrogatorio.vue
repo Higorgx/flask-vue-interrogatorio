@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-sm-10">
+      <div v-if="this.questStart===false" class="container my-5">
         <h1>Interrogatório</h1>
         <hr>
         <h4>Você é um suspeito de um assasinato,</h4>
@@ -10,26 +10,28 @@
         <button
         type="button"
         class="btn btn-primary"
-        v-b-modal.book-update-modal
-        @click="editBook(book)"
+        v-on:click.stop.prevent = startQuest
         >Iniciar</button>
       </div>
+       <div v-if="this.questStart && this.questFinish == false" class="container my-5">
+       <div class="col-8">
+                <h1>Questão {{this.index + 1}}</h1>
+                <h2 class="text-center mt-5">{{questions[index]}}</h2>
+                <div class="float-right">
+                    <button type="button"
+                    class="btn btn-success
+                    mt-5 mr-3 btn-lg"
+                    v-on:click.stop.prevent = getAnswerYes
+                    >Sim</button>
+                    <button type="button"
+                    class="btn btn-danger
+                    mt-5 mr-2 btn-lg"
+                    v-on:click.stop.prevent = getAnswerNo
+                    >Não</button>
+                </div>
+            </div>
+       </div>
     </div>
-    <b-modal ref="questionsModal"
-            id="questions-modal"
-            title="Perguntas"
-            hide-footer>
-          <b-form @submit="onDeleteBook" @reset="onResetDelete" class="w-100">
-          <b-form-group id="form-title-edit-group"
-                    label="Delete:"
-                    label-for="form-title-edit-input">
-          </b-form-group>
-        <b-button-group>
-          <b-button type="submit" variant="primary">Sim</b-button>
-          <b-button type="close" variant="danger">Não</b-button>
-        </b-button-group>
-      </b-form>
-    </b-modal>
   </div>
 </template>
 
@@ -37,27 +39,52 @@
 import axios from 'axios';
 
 export default {
-  name: 'Ping',
   data() {
     return {
-      msg: '',
+      questStart: false,
+      questFinish: false,
+      index: 0,
+      questions: [],
+      questionsId: '',
+      BookForm: {
+        id: 'Null',
+        question: '',
+        answer: false,
+      },
     };
   },
   methods: {
-    getMessage() {
+    startQuest() {
+      this.questStart = true;
+    },
+    nextQuest() {
+      this.index += 1;
+      if (this.index === 5) {
+        this.questFinished();
+      }
+    },
+    getQuestions() {
       const path = 'http://localhost:5000/perguntas';
       axios.get(path)
         .then((res) => {
-          this.msg = res.data;
+          this.questions = res.data.questions;
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
         });
     },
+    onShowQuestion(questionsId) {
+      this.questionsId = questionsId;
+      this.$bvModal.show('modal-question');
+    },
+    onClose() {
+      this.$bvModal.show('modal-question');
+    },
+
   },
   created() {
-    this.getMessage();
+    this.getQuestions();
   },
 };
 </script>

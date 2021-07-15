@@ -13,29 +13,38 @@ app.config.from_object(__name__)
 # enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
 
+@app.route('/perguntas/<int:id>', methods=['GET'])
+def get_book_by_id(id):
+    return_value = QUESTIONS.get_Perguntas(id)
+    return jsonify(return_value)
 
 # sanity check route
 @app.route('/perguntas', methods=['GET'])
-def Perguntas():
+def get_Perguntas():
     response_object = {'status': 'sucesso'}
     response_object['questions'] = QUESTIONS
     return jsonify(response_object)
 
 QUESTIONS = [
     {
-        'id': uuid.uuid4().hex,
-        'pergunta': 'a arte de enganar',
-        'resposta': False
+        'question': 'Telefonou para a vitima?',
+        'answer': False
     },
     {
-        'id': uuid.uuid4().hex,
-        'pergunta': 'Tecnicas de Invasão',
-        'resposta': False
+        'question': 'Esteve no local do crime?',
+        'answer': False
     },
     {
-        'id': uuid.uuid4().hex,
-        'pergunta': 'As Armas da Persuasão',
-        'resposta': False
+        'question': 'Mora perto do local do crime?',
+        'answer': False
+    },
+    {
+        'question': 'Devia para a vitima?',
+        'answer': False
+    },
+    {
+        'question': 'Já trabalhou com a vítima?',
+        'answer': False
     }
 ]
 
