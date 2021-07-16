@@ -15,8 +15,8 @@
       </div>
        <div v-if="this.questStart && this.questFinish == false" class="container my-5">
        <div class="col-8">
-                <h1>Questão {{this.index + 1}}</h1>
-                <h2 class="text-center mt-5">{{questions[index].question}}</h2>
+                <h2>Questão {{this.index + 1}}</h2>
+                <h3 class="mt-5">{{questions[index].question}}</h3>
                 <div class="float-right">
                     <button type="button"
                     class="btn btn-success
@@ -77,12 +77,10 @@ export default {
     },
     getAnswerYes() {
       this.answers.push('sim');
-      console.log(this.answers);
       this.nextQuest();
     },
     getAnswerNo() {
       this.answers.push('nao');
-      console.log(this.answers);
       this.nextQuest();
     },
     questFinished() {
